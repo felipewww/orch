@@ -5,7 +5,8 @@ export const intentRefinerOutputSchema = z.object({
     valueHypothesis: z.string(),
     mainRisk: z.string(),
     needsClarification: z.boolean(),
-    clarifyingQuestions: z.array(z.string()).max(3),
+    // clarifyingQuestions: z.array(z.string()).max(3),
+    clarifyingQuestions: z.array(z.string()),
     canAdvance: z.boolean(),
 });
 
