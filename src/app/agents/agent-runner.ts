@@ -1,13 +1,13 @@
 import {RefinableAgentOutput} from "@/app/agents/refinable-agent-output";
-import {TerminalIO} from "@/infra/terminal-io";
+import {IO} from "@/infra/io";
 import {BaseAgent} from "@/app/agents/base-agent";
 
 export class AgentRunner<I, O extends RefinableAgentOutput> {
     constructor(
         private agent: BaseAgent<I, O>,
-        private io: TerminalIO,
+        private io: IO,
         private mergeInput: (input: I, humanAnswers: string[]) => I,
-        private maxRounds = 2,
+        private maxRounds = 4,
     ) {}
 
     async run(initialInput: I): Promise<O> {
@@ -16,8 +16,8 @@ export class AgentRunner<I, O extends RefinableAgentOutput> {
         for (let round = 0; round <= this.maxRounds; round++) {
             const result = await this.agent.run(currentInput);
 
-            this.io.print(`\n=== ${this.agent.name} output ===`);
-            this.io.printJson(result);
+            await this.io.print(`\n=== ${this.agent.name} output ===`);
+            await this.io.printJson(result);
 
             const hasQuestions =
                 result.needsClarification &&
@@ -48,7 +48,7 @@ export class AgentRunner<I, O extends RefinableAgentOutput> {
 
             // canAdvance = false
             if (!hasQuestions || round === this.maxRounds) {
-                this.io.print("\nRefinement limit reached. Advancing with explicit uncertainty.");
+                await this.io.print("\nRefinement limit reached. Advancing with explicit uncertainty.");
                 return result;
             }
 

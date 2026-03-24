@@ -36,7 +36,7 @@ export class AntService {
     ): Promise<z.infer<z.ZodObject<T>>> {
         const res = await this.client.messages.create({
             model: "claude-sonnet-4-6",
-            max_tokens: 1000,
+            max_tokens: 4096,
             system: sysPrompt,
             output_config: {
                 format: {
