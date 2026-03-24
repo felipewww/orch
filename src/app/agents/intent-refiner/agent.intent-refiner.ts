@@ -15,24 +15,28 @@ export class AgentIntentRefiner extends BaseAgent<IntentRefinerInput, IntentRefi
 
         const prompt = `
             Analise a ideia abaixo.
-            
+
             Retorne:
             - problem
             - valueHypothesis
             - mainRisk
+            - riskLevel (low | medium | high | blocker)
+            - engineeringConcerns (problemas técnicos que o autor provavelmente não percebeu)
             - needsClarification
             - clarifyingQuestions
             - canAdvance
-            
+
+            Se houver esclarecimentos humanos, reavalie os riscos com base na abordagem escolhida.
+
             Ideia:
             ${validInput.rawIdea}
-            
+
             Autor:
             ${validInput.authorRole ?? "desconhecido"}
-            
+
             Contexto estratégico:
             ${validInput.strategicContext ?? "não informado"}
-            
+
             Esclarecimentos humanos já recebidos:
             ${
                 validInput.humanClarifications.length > 0
