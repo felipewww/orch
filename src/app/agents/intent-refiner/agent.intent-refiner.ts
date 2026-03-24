@@ -1,25 +1,17 @@
 import {BaseAgent} from "@/app/agents/base-agent";
 import {IntentRefinerOutput, intentRefinerOutputSchema} from "@/app/agents/intent-refiner/intent-refiner.output-schema";
 import {IntentRefinerInput, intentRefinerInputSchema} from "@/app/agents/intent-refiner/intent-refine.input-schema";
+import {loadPrompt} from "@/infra/prompt-loader";
+
+const companyContext = loadPrompt("prompts/company.md");
+const agentSystem = loadPrompt("prompts/agents/intent-refiner/system.md");
+const system = `${companyContext}\n\n---\n\n${agentSystem}`;
 
 export class AgentIntentRefiner extends BaseAgent<IntentRefinerInput, IntentRefinerOutput> {
     name = 'IntentRefinerAgent';
 
     async run(input: IntentRefinerInput) {
         const validInput = intentRefinerInputSchema.parse(input);
-
-        const system = `
-            Você é um especialista em produto e discovery.
-            Seu papel é transformar uma ideia bruta em um resumo claro e curto.
-            Não invente contexto não fornecido.
-            Se houver ambiguidade, marque isso explicitamente.
-
-           Responda APENAS com JSON válido.
-            NÃO use:
-            - markdown
-            - \`\`\`json
-            - explicações
-        `;
 
         const prompt = `
             Analise a ideia abaixo.

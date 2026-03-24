@@ -17,7 +17,7 @@ export class AgentRunner<I, O extends RefinableAgentOutput> {
         for (let round = 0; round <= this.maxRounds; round++) {
             const result = await this.agent.run(currentInput);
 
-            this.io.print(`\n=== ${this.agent.name} output ===`);
+            this.io.print(`\n=== ${this.agent.name} output ===`.yellow);
             this.io.printJson(result);
 
             if (result.canAdvance) {
